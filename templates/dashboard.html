@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #f4f7fb;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: #002060;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .nav-link:hover {
+      color: #ffd700 !important;
+    }
+
+    /* Welcome card */
+    .welcome-card {
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      color: white;
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+    }
+    .welcome-card h2 {
+      font-weight: 700;
+    }
+
+    /* Section titles */
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #002060;
+      margin: 25px 0 15px;
+      border-left: 5px solid #007bff;
+      padding-left: 10px;
+    }
+
+    /* Course cards */
+    .course-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+      transition: 0.3s;
+    }
+    .course-card:hover {
+      transform: translateY(-5px);
+    }
+    .course-card .card-body {
+      padding: 20px;
+    }
+    .btn-action {
+      border-radius: 20px;
+      font-size: 0.85rem;
+      padding: 5px 15px;
+    }
+
+    /* Add student form */
+    .form-card {
+      border-radius: 15px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.08);
+      padding: 25px;
+      margin-bottom: 30px;
+      background: white;
+    }
+
+    /* Student table */
+    table {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.08);
+    }
+    table th {
+      background: #002060;
+      color: white;
+    }
+    table td {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">Student Management System</a>
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/logout/">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-4">
+
+    <!-- Welcome -->
+    <div class="welcome-card">
+      <h2>Welcome, {{ user.username }}!</h2>
+      <p>This is your dashboard. You can manage your account from here.</p>
+    </div>
+
+    <!-- Courses Section -->
+    <h3 class="section-title">📚 Your Courses</h3>
+    <a href="{% url 'add_course' %}" class="btn btn-primary mb-3">➕ Add New Course</a>
+
+    <div class="row">
+      {% for course in courses %}
+      <div class="col-md-6">
+        <div class="card course-card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">{{ course.name }}</h5>
+            <p><strong>Teacher:</strong> {{ course.teacher }}</p>
+            <p><strong>Description:</strong> {{ course.description }}</p>
+            <p><strong>Duration:</strong> {{ course.duration }}</p>
+            <p><strong>Price:</strong> {{ course.price }}</p>
+            <p><strong>Starting Date:</strong> {{ course.start_date }}</p>
+            <p><strong>Phone:</strong> {{ course.phone }}</p>
+            <a href="{% url 'edit_course' course.id %}" class="btn btn-warning btn-action">✏ Edit</a>
+            <a href="{% url 'delete_course' course.id %}" class="btn btn-danger btn-action">🗑 Delete</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Add Student Form -->
+    <h3 class="section-title">👨‍🎓 Add Student</h3>
+    <div class="form-card">
+      <form method="post">
+        {% csrf_token %}
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Roll Number</label>
+            <input type="number" name="roll_number" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Course</label>
+            <select name="course" class="form-select">
+              <option value="">---------</option>
+              {% for course in courses %}
+              <option value="{{ course.id }}">{{ course.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success">➕ Add Student</button>
+      </form>
+    </div>
+
+    <!-- Student List -->
+    <h3 class="section-title">📋 Student List</h3>
+    <table class="table table-hover table-bordered text-center">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Roll Number</th>
+          <th>Course</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td>{{ student.name }}</td>
+          <td>{{ student.email }}</td>
+          <td>{{ student.roll_number }}</td>
+          <td>{{ student.course.name }}</td>
+          <td>
+            <a href="{% url 'delete_student' student.id %}" class="btn btn-danger btn-sm">🗑 Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  {% include 'footer.html' %}
+</body>
+</html>
