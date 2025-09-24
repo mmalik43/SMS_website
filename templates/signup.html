@@ -2,73 +2,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Signup</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #6dd5fa, #8e44ad);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .auth-card {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0px 8px 25px rgba(0,0,0,0.2);
-      padding: 30px;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
-    .form-control {
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
-    .btn-custom {
-      border-radius: 10px;
-      background: linear-gradient(90deg, #0d6efd, #0056b3);
-      color: white;
-      font-weight: 600;
-      width: 100%;
-    }
-    .form-footer {
-      margin-top: 15px;
-      font-size: 0.9rem;
-    }
-    .form-footer a {
-      text-decoration: none;
-      color: #0d6efd;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signup</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body { display:flex; justify-content:center; align-items:center; min-height:100vh; background: linear-gradient(135deg, #6dd5fa, #8e44ad); font-family: 'Segoe UI', sans-serif; }
+.auth-card { background:white; padding:30px; border-radius:15px; box-shadow:0px 8px 25px rgba(0,0,0,0.2); max-width:400px; width:100%; text-align:center; }
+.form-control { margin-bottom:15px; border-radius:10px; }
+.btn-custom { width:100%; background:linear-gradient(90deg,#0d6efd,#0056b3); color:white; border-radius:10px; font-weight:600; }
+.form-footer { margin-top:15px; font-size:0.9rem; }
+.form-footer a { color:#0d6efd; text-decoration:none; }
+</style>
 </head>
 <body>
-  <div class="auth-card">
-    <h3 class="mb-3">Signup</h3>
-    <form method="post">
-      {% csrf_token %}
-      <input type="text" class="form-control" name="username" placeholder="Username" required>
-      <input type="email" class="form-control" name="email" placeholder="Email" required>
-      <input type="password" class="form-control" name="password1" placeholder="Password" required>
-      <input type="password" class="form-control" name="password2" placeholder="Confirm Password" required>
-      <button type="submit" class="btn btn-custom">Signup</button>
-    </form>
-    <div class="form-footer">
-      Already have an account? <a href="{% url 'login' %}">Login</a>
-    </div>
-  </div>
+<div class="auth-card">
+<h3>Signup</h3>
 
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-warning">{{ message }}</div>
+  {% endfor %}
+{% endif %}
 
-  <form method="post">
+<form method="post">
   {% csrf_token %}
-  <input type="text" name="username" placeholder="Username" required><br>
-  <input type="email" name="email" placeholder="Email" required><br>
-  <input type="password" name="password" placeholder="Password" required><br>
-  <button type="submit">Sign Up</button>
+  <input type="text" class="form-control" name="username" placeholder="Username" required>
+  <input type="email" class="form-control" name="email" placeholder="Email" required>
+  <input type="password" class="form-control" name="password1" placeholder="Password" required>
+  <input type="password" class="form-control" name="password2" placeholder="Confirm Password" required>
+  <button type="submit" class="btn btn-custom">Signup</button>
 </form>
 
+<div class="form-footer">
+  Already have an account? <a href="{% url 'login' %}">Login</a>
+</div>
+</div>
 </body>
 </html>
